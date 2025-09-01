@@ -1,14 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:task_manage_ment/binding/initial_binding.dart';
-import 'package:task_manage_ment/routes/app_pages.dart';
-import 'package:task_manage_ment/routes/app_routes.dart';
-import 'package:task_manage_ment/ui/themes/app_theme.dart';
+import 'package:task_manage_ment/contollers/auth_controller.dart';
+import 'package:task_manage_ment/contollers/data_controller.dart';
+import 'package:task_manage_ment/views/login_page.dart';
+import 'package:task_manage_ment/views/myhome_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(DataController());
+  Get.put(AuthController());
   runApp(MyApp());
 }
 
@@ -17,11 +20,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Task Manager',
-      theme: AppTheme.lightTheme,
-      initialBinding: InitialBinding(),
-      initialRoute: AppRoutes.SPLASH,
-      getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            // User is logged in
+            return MyHomePage();
+          } else {
+            // User is not logged in
+            return LoginPage();
+          }
+        },
+      ),
     );
   }
 }
