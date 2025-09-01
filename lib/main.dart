@@ -24,11 +24,20 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          print(
+            'StreamBuilder rebuilt - Connection: ${snapshot.connectionState}',
+          );
+          print('Has data: ${snapshot.hasData}, Data: ${snapshot.data}');
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+
           if (snapshot.hasData && snapshot.data != null) {
-            // User is logged in
+            print('Showing HomePage');
             return MyHomePage();
           } else {
-            // User is not logged in
+            print('Showing LoginPage');
             return LoginPage();
           }
         },

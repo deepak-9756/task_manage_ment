@@ -27,7 +27,17 @@ class AuthController extends GetxController {
   }
 
   Future<void> logout() async {
-    await auth.signOut();
+    try {
+      print('🔄 Starting logout process...');
+      await auth.signOut();
+      print('✅ SignOut completed');
+
+      // Current user check करें
+      final currentUser = FirebaseAuth.instance.currentUser;
+      print('Current user after signOut: $currentUser');
+    } catch (e) {
+      print('❌ Logout error: $e');
+    }
   }
 
   Future<bool> signup() {
