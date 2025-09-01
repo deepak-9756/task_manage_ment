@@ -11,6 +11,8 @@ class AuthController extends GetxController {
   final auth = FirebaseAuth.instance;
   bool isPasswordVisible = false;
 
+  
+
   @override
   void onInit() {
     // TODO: implement onInit
