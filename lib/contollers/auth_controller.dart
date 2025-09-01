@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:task_manage_ment/views/login_page.dart';
+import 'package:task_manage_ment/views/myhome_page.dart';
 
 class AuthController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -13,6 +15,14 @@ class AuthController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    auth.authStateChanges().listen((User? user) {
+      if (user == null) {
+        Get.offAll(LoginPage());
+      } else {
+        Get.offAll(MyHomePage());
+        print('User is signed in! ${user.email}');
+      }
+    });
   }
 
   void togglePasswordVisibility() {
